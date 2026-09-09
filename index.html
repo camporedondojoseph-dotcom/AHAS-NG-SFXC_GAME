@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Ahas ng SFXC | Jeepney Odyssey</title>
+
+<meta name="description"
+ content="Ahas ng SFXC: Jeepney Odyssey Edition — A Filipino-themed Python arcade game combining classic Snake gameplay with jeepney culture, Filipino food, passengers, traffic, and barangay life.">
+
+<meta name="keywords"
+ content="Ahas ng SFXC, Jeepney Odyssey, Filipino Game, Python Game, Snake Game, SFXC">
+
+  <meta name="author" content="Joseph S. Camporedondo Jr.">
+
+  <link rel="stylesheet" href="css/style.css">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Press+Start+2P&display=swap"
+    rel="stylesheet">
+</head>
+
+<body>
+
+<!-- =====================================================
+     NAVIGATION
+===================================================== -->
+
+<header class="site-header">
+
+  <div class="container header-inner">
+
+```
+<a href="#home" class="brand">
+
+  <div class="brand-icon">🛺</div>
+
+  <div>
+    <strong>AHAS NG SFXC</strong>
+    <span>Jeepney Odyssey</span>
+  </div>
+
+</a>
+
+<nav class="main-nav">
+
+  <a href="#about">About</a>
+  <a href="#concept">Concept</a>
+  <a href="#features">Features</a>
+  <a href="#screenshots">Screenshots</a>
+  <a href="#how-to-play">How to Play</a>
+
+  <a href="#download" class="nav-download">
+    Download
+  </a>
+
+</nav>
+```
+
+  </div>
+
+</header>
+
+<!-- =====================================================
+     HERO
+===================================================== -->
+
+<main>
+
+<section id="home" class="hero">
+
+  <div class="hero-overlay"></div>
+
+  <div class="container hero-content">
+
+```
+<div class="hero-badge">
+  🇵🇭 FILIPINO-THEMED PYTHON GAME
+</div>
+
+<p class="hero-kicker">
+  🛺 Sakay na! Your barangay adventure starts here.
+</p>
+
+<h1>
+  AHAS NG SFXC
+  <span>JEEPNEY ODYSSEY</span>
+</h1>
+
+<p class="hero-description">
+  Drive your jeepney through the busy barangay streets,
+  collect Filipino food, pick up pasahero, follow traffic
+  lights, avoid bombs, and chase the highest score!
+</p>
+
+<div class="hero-buttons">
+
+  <a href="#download" class="btn btn-primary">
+    ⬇ Download Game
+  </a>
+
+  <a href="#about" class="btn btn-secondary">
+    🎮 Explore Game
+  </a>
+
+</div>
+
+<div class="hero-stats">
+
+  <div>
+    <strong>🐍</strong>
+    <span>Snake Gameplay</span>
+  </div>
+
+  <div>
+    <strong>🛺</strong>
+    <span>Jeepney Theme</span>
+  </div>
+
+  <div>
+    <strong>🍛</strong>
+    <span>Filipino Food</span>
+  </div>
+
+  <div>
+    <strong>🚦</strong>
+    <span>Traffic System</span>
+  </div>
+
+</div>
+```
+
+  </div>
+
+</section>
+
+<!-- =====================================================
+     ABOUT
+===================================================== -->
+
+<section id="about" class="section">
+
+  <div class="container">
+
+```
+<div class="section-heading">
+
+  <span>01 • THE GAME</span>
+
+  <h2>
+    Welcome to the
+    <strong>Barangay</strong>
+  </h2>
+
+  <p>
+    Classic Snake gameplay meets Filipino jeepney culture.
+  </p>
+
+</div>
+
+
+<div class="about-grid">
+
+  <div class="card about-main">
+
+    <div class="card-icon">🛺</div>
+
+    <h3>Game Description</h3>
+
+    <p>
+      <strong>Ahas ng SFXC: Jeepney Odyssey Edition</strong>
+      is a Filipino-themed arcade game inspired by the classic
+      Snake Game. Players control a jeepney while traveling
+      through the barangay, collecting Filipino food and
+      picking up passengers.
+    </p>
+
+    <p>
+      Bring passengers to the Barangay Terminal to earn
+      rewards, build your score, and continue your journey.
+      As the jeepney grows longer, movement becomes more
+      challenging.
+    </p>
+
+    <p>
+      Players must avoid bombs, pay attention to traffic
+      conditions, collect special items, and maintain their
+      combo streak while trying to beat the high score.
+    </p>
+
+  </div>
+
+
+  <div class="about-side">
+
+    <div class="mini-card">
+      <span>🎯</span>
+      <div>
+        <strong>Goal</strong>
+        <p>Get the highest score.</p>
+      </div>
+    </div>
+
+    <div class="mini-card">
+      <span>👨‍👩‍👧</span>
+      <div>
+        <strong>Pasahero</strong>
+        <p>Pick up and deliver passengers.</p>
+      </div>
+    </div>
+
+    <div class="mini-card">
+      <span>🏆</span>
+      <div>
+        <strong>Challenge</strong>
+        <p>Beat your high score.</p>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+```
+
+  </div>
+
+</section>
+
+<!-- =====================================================
+     CONCEPT
+===================================================== -->
+
+<section id="concept" class="section section-dark">
+
+  <div class="container">
+
+```
+<div class="section-heading">
+
+  <span>02 • GAME CONCEPT</span>
+
+  <h2>
+    Snake Gameplay,
+    <strong>Pinoy Style</strong>
+  </h2>
+
+</div>
+
+
+<div class="concept-grid">
+
+  <div class="concept-card">
+
+    <div class="number">01</div>
+
+    <h3>Classic Foundation</h3>
+
+    <p>
+      The project started from an existing Python Snake Game
+      built using the Turtle module.
+    </p>
+
+  </div>
+
+
+  <div class="concept-card">
+
+    <div class="number">02</div>
+
+    <h3>Filipino Transformation</h3>
+
+    <p>
+      The original gameplay was enhanced with jeepneys,
+      Filipino food, passengers, barangay terminals,
+      traffic lights, and Filipino-inspired visuals.
+    </p>
+
+  </div>
+
+
+  <div class="concept-card">
+
+    <div class="number">03</div>
+
+    <h3>New Challenge</h3>
+
+    <p>
+      Bombs, traffic conditions, combo scoring, power-ups,
+      and increasing difficulty make every trip more exciting.
+    </p>
+
+  </div>
+
+</div>
+```
+
+  </div>
+
+</section>
+
+<!-- =====================================================
+     FILIPINO THEME
+===================================================== -->
+
+<section id="theme" class="section">
+
+  <div class="container">
+
+```
+<div class="section-heading">
+
+  <span>03 • FILIPINO THEME</span>
+
+  <h2>
+    Proudly
+    <strong>Pinoy</strong>
+  </h2>
+
+  <p>
+    Inspired by everyday Filipino life and culture.
+  </p>
+
+</div>
+
+
+<div class="theme-grid">
+
+  <article class="theme-card">
+
+    <div class="theme-icon">🛺</div>
+
+    <h3>Jeepney Culture</h3>
+
+    <p>
+      The iconic Filipino jeepney becomes the heart
+      of the game.
+    </p>
+
+  </article>
+
+
+  <article class="theme-card">
+
+    <div class="theme-icon">🍛</div>
+
+    <h3>Filipino Food</h3>
+
+    <p>
+      Collect Mango, Pandesal, Adobo, Halo-Halo,
+      Isda, Bibingka, and Golden Suman.
+    </p>
+
+  </article>
+
+
+  <article class="theme-card">
+
+    <div class="theme-icon">👥</div>
+
+    <h3>Pasahero</h3>
+
+    <p>
+      Pick up passengers and deliver them safely
+      to their destination.
+    </p>
+
+  </article>
+
+
+  <article class="theme-card">
+
+    <div class="theme-icon">🏘️</div>
+
+    <h3>Barangay Life</h3>
+
+    <p>
+      Travel through a colorful barangay-inspired
+      environment.
+    </p>
+
+  </article>
+
+
+  <article class="theme-card">
+
+    <div class="theme-icon">🚦</div>
+
+    <h3>Traffic Rules</h3>
+
+    <p>
+      Watch the GO, WARNING, and RED traffic conditions
+      while driving.
+    </p>
+
+  </article>
+
+
+  <article class="theme-card">
+
+    <div class="theme-icon">🍚</div>
+
+    <h3>Golden Suman</h3>
+
+    <p>
+      Collect the special Golden Suman power-up
+      for temporary protection.
+    </p>
+
+  </article>
+
+</div>
+```
+
+  </div>
+
+</section>
+
+<!-- =====================================================
+     FEATURES
+===================================================== -->
+
+<section id="features" class="section section-dark">
+
+  <div class="container">
+
+```
+<div class="section-heading">
+
+  <span>04 • FEATURES</span>
+
+  <h2>
+    More Than Just
+    <strong>Snake</strong>
+  </h2>
+
+</div>
+
+
+<div class="feature-grid">
+
+  <div class="feature">
+    <span>🍴</span>
+    <h3>Food Collection</h3>
+    <p>Collect Filipino delicacies for points.</p>
+  </div>
+
+  <div class="feature">
+    <span>👥</span>
+    <h3>Passenger System</h3>
+    <p>Pick up and deliver pasahero.</p>
+  </div>
+
+  <div class="feature">
+    <span>🏁</span>
+    <h3>Barangay Terminal</h3>
+    <p>Complete passenger deliveries for rewards.</p>
+  </div>
+
+  <div class="feature">
+    <span>🚦</span>
+    <h3>Traffic System</h3>
+    <p>React to changing traffic conditions.</p>
+  </div>
+
+  <div class="feature">
+    <span>💣</span>
+    <h3>Bomb Obstacles</h3>
+    <p>Avoid dangerous obstacles on the road.</p>
+  </div>
+
+  <div class="feature">
+    <span>🔥</span>
+    <h3>Combo System</h3>
+    <p>Keep collecting to build your combo.</p>
+  </div>
+
+  <div class="feature">
+    <span>🛡️</span>
+    <h3>Golden Suman</h3>
+    <p>Use the special shield power-up.</p>
+  </div>
+
+  <div class="feature">
+    <span>🏆</span>
+    <h3>High Score</h3>
+    <p>Challenge yourself to beat your record.</p>
+  </div>
+
+</div>
+```
+
+  </div>
+
+</section>
+
+<!-- =====================================================
+     SCREENSHOTS
+===================================================== -->
+
+<section id="screenshots" class="section">
+
+  <div class="container">
+
+```
+<div class="section-heading">
+
+  <span>05 • GAMEPLAY</span>
+
+  <h2>
+    See the
+    <strong>Action</strong>
+  </h2>
+
+  <p>
+    Replace the placeholders with your actual game screenshots.
+  </p>
+
+</div>
+
+
+<div class="screenshots-grid">
+
+  <figure class="screenshot-card">
+
+    <img
+      src="screenshots/gameplay.png"
+      alt="Ahas ng SFXC gameplay screenshot"
+      onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+    >
+
+    <div class="screenshot-placeholder">
+      🎮
+      <span>Main Gameplay</span>
+    </div>
+
+    <figcaption>
+      Main Gameplay
+    </figcaption>
+
+  </figure>
+
+
+  <figure class="screenshot-card">
+
+    <img
+      src="screenshots/traffic.png"
+      alt="Ahas ng SFXC traffic system"
+      onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+    >
+
+    <div class="screenshot-placeholder">
+      🚦
+      <span>Traffic System</span>
+    </div>
+
+    <figcaption>
+      Traffic Light System
+    </figcaption>
+
+  </figure>
+
+
+  <figure class="screenshot-card">
+
+    <img
+      src="screenshots/pasahero.png"
+      alt="Ahas ng SFXC passenger system"
+      onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+    >
+
+    <div class="screenshot-placeholder">
+      👥
+      <span>Pasahero</span>
+    </div>
+
+    <figcaption>
+      Pasahero Pickup
+    </figcaption>
+
+  </figure>
+
+
+  <figure class="screenshot-card">
+
+    <img
+      src="screenshots/golden-suman.png"
+      alt="Ahas ng SFXC Golden Suman power-up"
+      onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+    >
+
+    <div class="screenshot-placeholder">
+      🍚
+      <span>Golden Suman</span>
+    </div>
+
+    <figcaption>
+      Golden Suman Power-Up
+    </figcaption>
+
+  </figure>
+
+</div>
+```
+
+  </div>
+
+</section>
+
+<!-- =====================================================
+     HOW TO PLAY
+===================================================== -->
+
+<section id="how-to-play" class="section section-dark">
+
+  <div class="container">
+
+```
+<div class="section-heading">
+
+  <span>06 • CONTROLS</span>
+
+  <h2>
+    How to
+    <strong>Play</strong>
+  </h2>
+
+</div>
+
+
+<div class="controls-grid">
+
+  <div class="control-item">
+    <kbd>W</kbd>
+    <kbd>↑</kbd>
+    <span>Move Up</span>
+  </div>
+
+  <div class="control-item">
+    <kbd>S</kbd>
+    <kbd>↓</kbd>
+    <span>Move Down</span>
+  </div>
+
+  <div class="control-item">
+    <kbd>A</kbd>
+    <kbd>←</kbd>
+    <span>Move Left</span>
+  </div>
+
+  <div class="control-item">
+    <kbd>D</kbd>
+    <kbd>→</kbd>
+    <span>Move Right</span>
+  </div>
+
+  <div class="control-item">
+    <kbd>P</kbd>
+    <span>Pause / Resume</span>
+  </div>
+
+  <div class="control-item">
+    <kbd>SPACE</kbd>
+    <span>Restart</span>
+  </div>
+
+</div>
+
+
+<div class="tips-card">
+
+  <h3>💡 Driver Tips</h3>
+
+  <ul>
+    <li>Collect food to increase your score.</li>
+    <li>Pick up passengers and deliver them to the terminal.</li>
+    <li>Avoid bombs and dangerous obstacles.</li>
+    <li>Watch the traffic system.</li>
+    <li>Use Golden Suman when you need protection.</li>
+    <li>Keep your combo going for better scores.</li>
+  </ul>
+
+</div>
+```
+
+  </div>
+
+</section>
+
+<!-- =====================================================
+     DOWNLOAD
+===================================================== -->
+
+<section id="download" class="section download-section">
+
+  <div class="container">
+
+```
+<div class="section-heading">
+
+  <span>07 • GET THE GAME</span>
+
+  <h2>
+    Ready to
+    <strong>Sakay?</strong>
+  </h2>
+
+  <p>
+    Download the source code or Windows version.
+  </p>
+
+</div>
+
+
+<div class="download-grid">
+
+
+  <!-- PYTHON -->
+
+  <div class="download-card">
+
+    <div class="download-icon">🐍</div>
+
+    <h3>Python Source</h3>
+
+    <p>
+      Download the complete Python source code
+      and explore how the game was created.
+    </p>
+
+    <a
+      href="source/Ahas.py"
+      download
+      class="btn btn-primary"
+    >
+      ⬇ Download .PY
+    </a>
+
+  </div>
+
+
+  <!-- EXE -->
+
+  <div class="download-card featured-download">
+
+    <div class="recommended">
+      RECOMMENDED
+    </div>
+
+    <div class="download-icon">🎮</div>
+
+    <h3>Windows Game</h3>
+
+    <p>
+      Play the game without opening the Python
+      source code.
+    </p>
+
+    <a
+      href="download/AHAS_NG_SFXC.exe"
+      download
+      class="btn btn-primary"
+    >
+      🎮 Download EXE
+    </a>
+
+  </div>
+
+
+  <!-- ZIP -->
+
+  <div class="download-card">
+
+    <div class="download-icon">📦</div>
+
+    <h3>Complete Package</h3>
+
+    <p>
+      Download the complete project package
+      containing the game files and resources.
+    </p>
+
+    <a
+      href="download/Ahas-ng-SFXC-Jeepney-Odyssey.zip"
+      download
+      class="btn btn-secondary"
+    >
+      📦 Download ZIP
+    </a>
+
+  </div>
+
+</div>
+
+
+<div class="github-box">
+
+  <span>💻</span>
+
+  <div>
+
+    <h3>View the Project on GitHub</h3>
+
+    <p>
+      Explore the source code and project files.
+    </p>
+
+  </div>
+
+  <a
+    href="https://github.com/YOUR-USERNAME/AHAS-NG-SFXC"
+    target="_blank"
+    rel="noopener"
+    class="btn btn-secondary"
+  >
+    GitHub →
+  </a>
+
+</div>
+```
+
+  </div>
+
+</section>
+
+<!-- =====================================================
+     DEVELOPER
+===================================================== -->
+
+<section id="developer" class="section">
+
+  <div class="container">
+
+```
+<div class="section-heading">
+
+  <span>08 • DEVELOPER</span>
+
+  <h2>
+    Meet the
+    <strong>Developer</strong>
+  </h2>
+
+</div>
+
+
+<div class="developer-card">
+
+  <div class="dev-avatar">
+    🇵🇭
+  </div>
+
+  <div class="dev-details">
+
+    <p class="dev-label">
+      DEVELOPED BY
+    </p>
+
+    <h3>
+      Joseph S. Camporedondo Jr.
+    </h3>
+
+    <p>
+      BSIT – [Your Section]
+    </p>
+
+    <p>
+      [Your School Name] (SFXC)
+    </p>
+
+    <span>
+      Python Game Enhancement Project
+    </span>
+
+  </div>
+
+</div>
+```
+
+  </div>
+
+</section>
+
+<!-- =====================================================
+     PROJECT INFO
+===================================================== -->
+
+<section class="project-banner">
+
+  <div class="container">
+
+```
+<div>
+
+  <span>🇵🇭 MADE WITH FILIPINO CREATIVITY</span>
+
+  <h2>
+    Classic Snake.
+    <br>
+    Filipino Adventure.
+  </h2>
+
+</div>
+
+<a href="#download" class="btn btn-primary">
+  Play Now →
+</a>
+```
+
+  </div>
+
+</section>
+
+</main>
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer class="site-footer">
+
+  <div class="container footer-grid">
+
+```
+<div>
+
+  <a href="#home" class="footer-brand">
+    🛺 AHAS NG SFXC
+  </a>
+
+  <p>
+    Jeepney Odyssey Edition
+  </p>
+
+  <small>
+    A Filipino-themed Python arcade game.
+  </small>
+
+</div>
+
+
+<div class="footer-links">
+
+  <strong>Explore</strong>
+
+  <a href="#about">About</a>
+  <a href="#concept">Concept</a>
+  <a href="#features">Features</a>
+  <a href="#screenshots">Screenshots</a>
+
+</div>
+
+
+<div class="footer-links">
+
+  <strong>Game</strong>
+
+  <a href="#how-to-play">How to Play</a>
+  <a href="#download">Download</a>
+  <a href="#developer">Developer</a>
+
+</div>
+```
+
+  </div>
+
+  <div class="footer-bottom">
+
+```
+<p>
+  © 2026 Ahas ng SFXC: Jeepney Odyssey Edition
+</p>
+
+<p>
+  🇵🇭 Made in the Philippines
+</p>
+```
+
+  </div>
+
+</footer>
+
+<script src="js/main.js"></script>
+
+</body>
+</html>
