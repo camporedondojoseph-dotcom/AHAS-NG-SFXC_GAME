@@ -1,990 +1,1332 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Ahas ng SFXC | Jeepney Odyssey</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ahas ng SFXC | Jeepney Odyssey</title>
 
-<meta name="description"
- content="Ahas ng SFXC: Jeepney Odyssey Edition — A Filipino-themed Python arcade game combining classic Snake gameplay with jeepney culture, Filipino food, passengers, traffic, and barangay life.">
+<meta
+    name="description"
+    content="Ahas ng SFXC: Jeepney Odyssey Edition - a Filipino-themed Python arcade game inspired by classic Snake gameplay, jeepney culture, Filipino food, passengers, traffic, and barangay life."
+>
+<meta
+    name="keywords"
+    content="Ahas ng SFXC, Jeepney Odyssey, Filipino Game, Python Game, Snake Game, SFXC"
+>
+<meta name="author" content="Joseph S. Camporedondo Jr.">
 
-<meta name="keywords"
- content="Ahas ng SFXC, Jeepney Odyssey, Filipino Game, Python Game, Snake Game, SFXC">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link
+    href="https://fonts.googleapis.com/css2?family=Bungee&family=Work+Sans:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap"
+    rel="stylesheet"
+>
 
-  <meta name="author" content="Joseph S. Camporedondo Jr.">
+<style>
 
-  <link rel="stylesheet" href="css/style.css">
+/* =====================================================
+   TOKENS
+===================================================== */
+:root{
+    --ink:        #17120c;
+    --ink-panel:  #221a12;
+    --paper:      #f4ecd8;
+    --paper-dim:  #e7dcc0;
+    --red:        #c5402c;
+    --red-dark:   #922c1e;
+    --gold:       #e6a53a;
+    --teal:       #1f6f68;
+    --chrome:     #c7ccce;
+    --ink-text:   #2a2013;
+    --muted:      #b9ab90;
+    --line:       rgba(244,236,216,0.14);
+    --radius-sm:  6px;
+    --radius-lg:  22px;
+    --font-display: "Bungee", cursive;
+    --font-body: "Work Sans", sans-serif;
+    --font-mono: "Space Mono", monospace;
+}
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+@media (prefers-reduced-motion: reduce){
+    *{ animation: none !important; transition: none !important; }
+}
 
-  <link
-    href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Press+Start+2P&display=swap"
-    rel="stylesheet">
+*{ margin:0; padding:0; box-sizing:border-box; }
+
+html{ scroll-behavior:smooth; }
+
+body{
+    font-family: var(--font-body);
+    background: var(--ink);
+    color: var(--paper);
+    line-height: 1.65;
+    overflow-x: hidden;
+}
+
+a{ text-decoration:none; color:inherit; }
+img{ max-width:100%; display:block; }
+ul{ list-style:none; }
+
+.container{
+    width: 90%;
+    max-width: 1180px;
+    margin: auto;
+}
+
+.eyebrow{
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    color: var(--gold);
+    letter-spacing: 0.02em;
+}
+
+h1,h2,h3{ font-family: var(--font-display); font-weight:400; letter-spacing:0.01em; }
+
+.section{ padding: 108px 0; position:relative; }
+.section-alt{ background: var(--ink-panel); }
+
+.section-head{
+    max-width: 620px;
+    margin-bottom: 56px;
+}
+.section-head h2{
+    font-size: clamp(28px, 4vw, 44px);
+    line-height:1.25;
+    margin-top:10px;
+}
+.section-head p{
+    color: var(--muted);
+    margin-top: 14px;
+    font-size: 15.5px;
+}
+
+.btn{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding: 14px 24px;
+    border-radius: var(--radius-sm);
+    font-weight:700;
+    font-size: 14.5px;
+    cursor:pointer;
+    border: 2px solid transparent;
+    transition: transform 0.18s ease, background 0.18s ease;
+}
+.btn-primary{ background: var(--gold); color: var(--ink); }
+.btn-primary:hover{ transform: translateY(-2px); background:#f2b658; }
+.btn-outline{
+    background: transparent;
+    border-color: var(--chrome);
+    color: var(--paper);
+}
+.btn-outline:hover{ transform: translateY(-2px); border-color: var(--gold); color: var(--gold); }
+.btn-dark{ background: var(--ink); color: var(--paper); }
+.btn-dark:hover{ transform: translateY(-2px); background: #000; }
+
+
+/* =====================================================
+   HEADER + ROUTE-BOARD NAV
+===================================================== */
+.site-header{
+    position: fixed;
+    top:0; left:0; width:100%;
+    z-index: 999;
+    background: rgba(23,18,12,0.92);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
+}
+
+.header-inner{
+    min-height: 74px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
+}
+
+.brand{ display:flex; align-items:center; gap:12px; }
+
+.brand-plate{
+    width: 46px; height:46px;
+    display:flex; align-items:center; justify-content:center;
+    background: var(--red);
+    border-radius: var(--radius-sm);
+    border: 2px solid var(--gold);
+    font-size: 22px;
+}
+
+.brand-text strong{
+    display:block;
+    font-family: var(--font-display);
+    font-size: 13px;
+    color: var(--paper);
+}
+.brand-text span{
+    display:block;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--gold);
+    margin-top: 3px;
+}
+
+/* the route board itself */
+.route-board{
+    display:flex;
+    align-items:center;
+    gap: 4px;
+    padding: 6px;
+    background: #0e0b07;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+}
+.route-board a{
+    padding: 9px 15px;
+    border-radius: 999px;
+    font-size: 12.5px;
+    font-weight:600;
+    color: var(--muted);
+    white-space: nowrap;
+}
+.route-board a:hover{ color: var(--paper); background: rgba(230,165,58,0.12); }
+.route-board a.stop-download{
+    background: var(--gold);
+    color: var(--ink);
+}
+.route-board a.stop-download:hover{ background:#f2b658; color:var(--ink); }
+
+.nav-toggle{
+    display:none;
+    width: 44px; height:44px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--line);
+    background: transparent;
+    color: var(--paper);
+    font-size: 18px;
+}
+
+/* =====================================================
+   HERO
+===================================================== */
+.hero{
+    min-height: 100vh;
+    display:flex;
+    align-items:center;
+    padding-top: 90px;
+    position: relative;
+    background:
+        radial-gradient(circle at 85% 12%, rgba(230,165,58,0.16), transparent 40%),
+        linear-gradient(180deg, #1c150d, #17120c 60%);
+    overflow:hidden;
+}
+
+.hero-grid{
+    display:grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 50px;
+    align-items:center;
+}
+
+.hero-tag{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--gold);
+    margin-bottom: 22px;
+}
+
+.hero h1{
+    font-size: clamp(34px, 5.4vw, 62px);
+    line-height: 1.28;
+    color: var(--paper);
+}
+.hero h1 .accent-line{
+    display:block;
+    color: var(--red);
+    -webkit-text-stroke: 1px var(--gold);
+    font-size: 0.5em;
+    margin-top: 16px;
+}
+
+.hero-description{
+    max-width: 540px;
+    margin-top: 24px;
+    color: var(--muted);
+    font-size: 16.5px;
+}
+
+.hero-buttons{
+    display:flex;
+    flex-wrap:wrap;
+    gap:14px;
+    margin-top: 32px;
+}
+
+/* boarding pass ticket */
+.ticket{
+    margin-top: 46px;
+    background: var(--paper);
+    color: var(--ink-text);
+    border-radius: var(--radius-sm);
+    display:flex;
+    position: relative;
+    max-width: 560px;
+    box-shadow: 0 22px 40px rgba(0,0,0,0.35);
+}
+.ticket::after{
+    content:"";
+    position:absolute;
+    top:0; bottom:0; left: 76%;
+    width:0;
+    border-left: 2px dashed rgba(42,32,19,0.3);
+}
+.ticket-main{
+    flex:1;
+    padding: 20px 22px;
+    display:grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px 20px;
+}
+.ticket-main div strong{
+    display:block;
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    color: var(--red-dark);
+    letter-spacing: 0.04em;
+}
+.ticket-main div span{
+    display:block;
+    font-size: 14px;
+    font-weight: 600;
+    margin-top: 3px;
+}
+.ticket-stub{
+    width: 24%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family: var(--font-display);
+    font-size: 26px;
+    color: var(--red);
+    writing-mode: vertical-rl;
+    letter-spacing: 3px;
+}
+
+/* road + driving jeep */
+.road-scene{
+    position:relative;
+    height: 420px;
+    border-radius: var(--radius-lg);
+    background: linear-gradient(180deg, rgba(230,165,58,0.08), transparent 40%), #241b12;
+    border: 1px solid var(--line);
+    overflow:hidden;
+}
+.road-strip{
+    position:absolute;
+    left:0; right:0; bottom: 60px;
+    height: 90px;
+    background: #34302c;
+    border-top: 4px solid #45403a;
+    border-bottom: 4px solid #100c08;
+}
+.road-strip::before{
+    content:"";
+    position:absolute;
+    left:0; right:0; top:50%;
+    height: 6px;
+    transform: translateY(-50%);
+    background-image: repeating-linear-gradient(90deg, var(--gold) 0 34px, transparent 34px 64px);
+}
+.jeep{
+    position:absolute;
+    bottom: 78px;
+    left: -140px;
+    font-size: 58px;
+    animation: drive-in 1.8s cubic-bezier(.2,.8,.2,1) 0.3s forwards;
+}
+@keyframes drive-in{
+    to{ left: 46%; }
+}
+.road-caption{
+    position:absolute;
+    top: 24px; left: 24px; right:24px;
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    color: var(--muted);
+}
+.road-caption strong{ color: var(--paper); display:block; font-family: var(--font-display); font-size: 15px; margin-bottom:6px; }
+
+/* =====================================================
+   ABOUT
+===================================================== */
+.about-grid{
+    display:grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 30px;
+}
+
+.poster-panel{
+    background: var(--paper);
+    color: var(--ink-text);
+    padding: 42px;
+    border-radius: var(--radius-sm);
+    border-left: 8px solid var(--red);
+    position: relative;
+}
+.poster-panel h3{
+    font-size: 22px;
+    margin-bottom: 16px;
+    color: var(--red-dark);
+}
+.poster-panel p{ margin-bottom: 14px; color: #4a3d2b; font-size: 15px; }
+.poster-panel p:last-child{ margin-bottom:0; }
+
+.manifest{
+    background: var(--ink-panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    padding: 8px;
+}
+.manifest-row{
+    display:flex;
+    align-items:flex-start;
+    gap: 14px;
+    padding: 16px;
+    border-bottom: 1px dashed var(--line);
+}
+.manifest-row:last-child{ border-bottom:none; }
+.manifest-row .mark{
+    width: 30px; height:30px;
+    flex-shrink:0;
+    border-radius: 50%;
+    background: var(--teal);
+    display:flex; align-items:center; justify-content:center;
+    font-size: 14px;
+}
+.manifest-row strong{ font-size: 14.5px; color: var(--paper); }
+.manifest-row p{ font-size: 13px; color: var(--muted); margin-top: 3px; }
+
+/* =====================================================
+   CONCEPT (real sequence — route path)
+===================================================== */
+.route-path{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    position: relative;
+}
+.route-path::before{
+    content:"";
+    position:absolute;
+    top: 26px; left: 8%; right:8%;
+    height: 3px;
+    background-image: repeating-linear-gradient(90deg, var(--chrome) 0 16px, transparent 16px 30px);
+    z-index:0;
+}
+.route-stop{ position:relative; z-index:1; padding: 0 20px; }
+.route-stop .pin{
+    width: 54px; height:54px;
+    border-radius: 50%;
+    background: var(--red);
+    border: 3px solid var(--gold);
+    display:flex; align-items:center; justify-content:center;
+    font-family: var(--font-display);
+    font-size: 18px;
+    margin-bottom: 22px;
+}
+.route-stop h3{ font-size: 19px; margin-bottom: 10px; color: var(--paper); }
+.route-stop p{ color: var(--muted); font-size: 14.5px; }
+
+/* =====================================================
+   FILIPINO THEME — signboard/menu strip
+===================================================== */
+.theme-strip{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+.theme-tile{
+    padding: 26px;
+    border-radius: var(--radius-sm);
+    position: relative;
+    overflow:hidden;
+}
+.theme-tile.c-red{ background: var(--red); color: var(--paper); }
+.theme-tile.c-gold{ background: var(--gold); color: var(--ink-text); }
+.theme-tile.c-paper{ background: var(--paper); color: var(--ink-text); }
+.theme-tile.c-teal{ background: var(--teal); color: var(--paper); }
+.theme-tile.c-ink{ background: var(--ink-panel); color: var(--paper); border: 1px solid var(--line); }
+
+.theme-tile .theme-icon{ font-size: 34px; margin-bottom: 14px; display:block; }
+.theme-tile h3{ font-size: 18px; margin-bottom: 8px; }
+.theme-tile p{ font-size: 13.5px; opacity: 0.88; }
+
+/* =====================================================
+   FEATURES — sticker badges, varied sizes
+===================================================== */
+.sticker-wall{
+    display:grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+}
+.sticker{
+    background: var(--ink-panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    padding: 22px;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+.sticker:hover{ transform: translateY(-4px) rotate(-0.4deg); border-color: var(--gold); }
+.sticker span{ font-size: 28px; }
+.sticker h3{ font-size: 15.5px; margin: 12px 0 6px; font-family: var(--font-body); font-weight:700; }
+.sticker p{ font-size: 13px; color: var(--muted); }
+.sticker.wide{ grid-column: span 2; }
+
+/* =====================================================
+   SCREENSHOTS — polaroids
+===================================================== */
+.corkboard{
+    background: repeating-linear-gradient(45deg, #2b2116, #2b2116 2px, #241c13 2px, #241c13 4px);
+    border-radius: var(--radius-lg);
+    padding: 46px;
+    display:grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 26px;
+}
+.polaroid{
+    background: var(--paper);
+    padding: 12px 12px 22px;
+    border-radius: 3px;
+    box-shadow: 0 14px 24px rgba(0,0,0,0.4);
+}
+.polaroid:nth-child(odd){ transform: rotate(-2.2deg); }
+.polaroid:nth-child(even){ transform: rotate(2deg); }
+.polaroid img{
+    width:100%;
+    height: 150px;
+    object-fit: cover;
+    background: #100c08;
+}
+.polaroid figcaption{
+    text-align:center;
+    color: var(--ink-text);
+    font-size: 12.5px;
+    font-weight:700;
+    margin-top: 10px;
+}
+
+/* =====================================================
+   HOW TO PLAY — keycaps
+===================================================== */
+.controls-wrap{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 46px;
+    align-items:start;
+}
+.keypad{
+    display:grid;
+    grid-template-columns: repeat(3, 60px);
+    grid-template-rows: repeat(2, 60px);
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 26px;
+}
+.key{
+    display:flex;
+    align-items:center; justify-content:center;
+    background: linear-gradient(180deg, #f4ecd8, #d8caa2);
+    color: var(--ink-text);
+    border-radius: 10px;
+    font-weight:800;
+    font-size: 16px;
+    box-shadow: 0 5px 0 #8b7a4f, 0 8px 14px rgba(0,0,0,0.4);
+}
+.key.up{ grid-column: 2; grid-row: 1; }
+.key.left{ grid-column: 1; grid-row: 2; }
+.key.down{ grid-column: 2; grid-row: 2; }
+.key.right{ grid-column: 3; grid-row: 2; }
+
+.control-list{ display:flex; flex-direction:column; gap:10px; }
+.control-line{
+    display:flex; align-items:center; gap:14px;
+    padding: 12px 16px;
+    background: var(--ink-panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+}
+.control-line kbd{
+    font-family: var(--font-mono);
+    background: var(--gold);
+    color: var(--ink);
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight:700;
+}
+.control-line span{ font-size: 14px; color: var(--muted); }
+
+.tips-card{
+    padding: 28px 30px;
+    background: var(--paper);
+    color: var(--ink-text);
+    border-radius: var(--radius-sm);
+}
+.tips-card h3{ font-family: var(--font-body); font-weight:800; font-size:16px; margin-bottom: 14px; color: var(--red-dark); }
+.tips-card li{ font-size: 14px; margin-bottom: 8px; padding-left: 18px; position:relative; color:#4a3d2b; }
+.tips-card li::before{ content:"—"; position:absolute; left:0; color: var(--red); }
+
+/* =====================================================
+   DOWNLOAD
+===================================================== */
+.download-layout{
+    display:grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 26px;
+}
+.download-primary{
+    padding: 40px;
+    background: linear-gradient(135deg, var(--red), var(--red-dark));
+    border-radius: var(--radius-lg);
+    display:flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 26px;
+}
+.download-primary .tag{ font-family: var(--font-mono); font-size:12px; color: var(--gold); }
+.download-primary h3{ font-size: 30px; margin-top: 10px; }
+.download-primary p{ color: rgba(244,236,216,0.85); max-width: 380px; margin-top: 10px; }
+
+.download-side{ display:flex; flex-direction:column; gap: 16px; }
+.download-mini{
+    display:flex;
+    align-items:center;
+    gap: 16px;
+    padding: 20px;
+    background: var(--ink-panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+}
+.download-mini span{ font-size: 26px; }
+.download-mini div{ flex:1; }
+.download-mini h4{ font-size: 14.5px; font-family: var(--font-body); font-weight:700; }
+.download-mini p{ font-size: 12.5px; color: var(--muted); margin-top: 2px; }
+.download-mini a{ font-size: 12.5px; font-weight:700; color: var(--gold); white-space:nowrap; }
+
+.repo-ticket{
+    margin-top: 30px;
+    display:grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: 0;
+    background: var(--paper);
+    color: var(--ink-text);
+    border-radius: var(--radius-sm);
+    overflow:hidden;
+}
+.repo-ticket .rt-left{ padding: 28px 30px; }
+.repo-ticket .rt-left h3{ font-family: var(--font-body); font-weight:800; font-size:16px; margin-bottom:6px; }
+.repo-ticket .rt-left p{ font-size: 13px; color:#5e5238; }
+.repo-ticket .rt-right{
+    background: var(--ink);
+    color: var(--paper);
+    display:flex; align-items:center; justify-content:center;
+    padding: 20px;
+}
+.qr-frame{
+    display:flex; align-items:center; gap:20px;
+}
+.qr-frame img{
+    width: 96px; height:96px;
+    border-radius: 6px;
+    background: white;
+    padding:6px;
+}
+.qr-frame p{ font-size: 12px; color: var(--muted); max-width:150px; }
+
+/* =====================================================
+   DEVELOPER — ID card
+===================================================== */
+.id-card{
+    max-width: 620px;
+    margin: auto;
+    display:flex;
+    gap: 0;
+    background: var(--paper);
+    color: var(--ink-text);
+    border-radius: var(--radius-sm);
+    overflow:hidden;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.35);
+}
+.id-photo{
+    width: 160px;
+    flex-shrink:0;
+    background: var(--teal);
+    display:flex; align-items:center; justify-content:center;
+    font-size: 54px;
+}
+.id-info{ padding: 30px; flex:1; }
+.id-info .id-label{
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--red-dark);
+    letter-spacing: 0.05em;
+}
+.id-info h3{ font-family: var(--font-body); font-weight:800; font-size: 22px; margin: 8px 0 4px; }
+.id-info p{ font-size: 14px; color: #5e5238; }
+.id-info .id-role{
+    display:inline-block;
+    margin-top: 12px;
+    padding: 6px 12px;
+    background: var(--gold);
+    color: var(--ink);
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight:700;
+}
+
+/* =====================================================
+   BANNER
+===================================================== */
+.banner{
+    padding: 64px 0;
+    background: var(--gold);
+    color: var(--ink);
+}
+.banner .container{
+    display:flex; align-items:center; justify-content:space-between; gap:30px; flex-wrap:wrap;
+}
+.banner h2{ font-size: clamp(24px, 4vw, 38px); line-height:1.3; }
+.banner .tag{ font-family: var(--font-mono); font-size:12px; }
+
+/* =====================================================
+   FOOTER
+===================================================== */
+.site-footer{ background: #0e0b07; padding-top: 56px; }
+.footer-grid{
+    display:grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 40px;
+    padding-bottom: 40px;
+}
+.footer-brand{ font-family: var(--font-display); font-size: 15px; color: var(--gold); }
+.site-footer p, .site-footer small{ color: var(--muted); font-size:13px; }
+.footer-links{ display:flex; flex-direction:column; gap:9px; }
+.footer-links strong{ font-family: var(--font-body); color: var(--paper); margin-bottom: 4px; }
+.footer-links a{ color: var(--muted); font-size:13px; }
+.footer-links a:hover{ color: var(--gold); }
+.footer-bottom{
+    padding: 20px 0;
+    border-top: 1px solid var(--line);
+    display:flex; justify-content:space-between; gap:20px; font-size:12px;
+    max-width: 1180px; margin:auto; width:90%;
+}
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+@media (max-width: 980px){
+    .route-board{ display:none; }
+    .nav-toggle{ display:flex; align-items:center; justify-content:center; }
+    .hero-grid{ grid-template-columns: 1fr; }
+    .about-grid, .download-layout, .controls-wrap{ grid-template-columns: 1fr; }
+    .route-path{ grid-template-columns: 1fr; gap: 34px; }
+    .route-path::before{ display:none; }
+    .theme-strip{ grid-template-columns: repeat(2, 1fr); }
+    .sticker-wall{ grid-template-columns: repeat(2, 1fr); }
+    .corkboard{ grid-template-columns: repeat(2, 1fr); }
+    .repo-ticket{ grid-template-columns: 1fr; }
+    .id-card{ flex-direction:column; }
+    .id-photo{ width:100%; height:120px; }
+    .footer-grid{ grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 620px){
+    .section{ padding: 72px 0; }
+    .ticket{ flex-direction:column; }
+    .ticket::after{ display:none; }
+    .ticket-stub{ writing-mode: horizontal-tb; width:100%; padding: 10px 0; border-top: 2px dashed rgba(42,32,19,0.3); }
+    .theme-strip, .sticker-wall, .corkboard{ grid-template-columns: 1fr; }
+    .banner .container{ flex-direction:column; align-items:flex-start; }
+    .footer-grid{ grid-template-columns: 1fr; }
+    .footer-bottom{ flex-direction:column; gap:8px; }
+    .road-scene{ height: 300px; }
+}
+
+/* mobile dropdown menu */
+.mobile-menu{
+    display:none;
+    flex-direction:column;
+    gap: 4px;
+    padding: 14px 5%;
+    background: rgba(23,18,12,0.98);
+    border-bottom: 1px solid var(--line);
+}
+.mobile-menu.open{ display:flex; }
+.mobile-menu a{
+    padding: 12px 10px;
+    color: var(--paper);
+    font-size: 14px;
+    border-bottom: 1px solid var(--line);
+}
+.mobile-menu a:last-child{ border-bottom:none; }
+
+</style>
 </head>
+
 
 <body>
 
 <!-- =====================================================
-     NAVIGATION
+     HEADER
 ===================================================== -->
-
 <header class="site-header">
+    <div class="container header-inner">
 
-  <div class="container header-inner">
+        <a href="#home" class="brand">
+            <div class="brand-plate">🛺</div>
+            <div class="brand-text">
+                <strong>Ahas ng SFXC</strong>
+                <span>Jeepney Odyssey</span>
+            </div>
+        </a>
 
-```
-<a href="#home" class="brand">
+        <nav class="route-board">
+            <a href="#about">About</a>
+            <a href="#concept">Concept</a>
+            <a href="#theme">Theme</a>
+            <a href="#features">Features</a>
+            <a href="#screenshots">Screenshots</a>
+            <a href="#how-to-play">How to play</a>
+            <a href="#download" class="stop-download">Download</a>
+        </nav>
 
-  <div class="brand-icon">🛺</div>
+        <button class="nav-toggle" id="navToggle" aria-label="Open menu">☰</button>
 
-  <div>
-    <strong>AHAS NG SFXC</strong>
-    <span>Jeepney Odyssey</span>
-  </div>
+    </div>
 
-</a>
-
-<nav class="main-nav">
-
-  <a href="#about">About</a>
-  <a href="#concept">Concept</a>
-  <a href="#features">Features</a>
-  <a href="#screenshots">Screenshots</a>
-  <a href="#how-to-play">How to Play</a>
-
-  <a href="#download" class="nav-download">
-    Download
-  </a>
-
-</nav>
-```
-
-  </div>
-
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="#about">About</a>
+        <a href="#concept">Concept</a>
+        <a href="#theme">Theme</a>
+        <a href="#features">Features</a>
+        <a href="#screenshots">Screenshots</a>
+        <a href="#how-to-play">How to play</a>
+        <a href="#download">Download</a>
+    </div>
 </header>
+
+
+<main>
 
 <!-- =====================================================
      HERO
 ===================================================== -->
-
-<main>
-
 <section id="home" class="hero">
+    <div class="container hero-grid">
 
-  <div class="hero-overlay"></div>
+        <div>
+            <p class="hero-tag">🇵🇭 A Filipino Python arcade game</p>
 
-  <div class="container hero-content">
+            <h1>
+                Ahas ng SFXC
+                <span class="accent-line">Jeepney Odyssey</span>
+            </h1>
 
-```
-<div class="hero-badge">
-  🇵🇭 FILIPINO-THEMED PYTHON GAME
-</div>
+            <p class="hero-description">
+                Drive a jeepney through busy barangay streets. Collect Filipino food,
+                pick up pasahero, read the traffic lights, dodge bombs, and chase
+                the highest score on the route.
+            </p>
 
-<p class="hero-kicker">
-  🛺 Sakay na! Your barangay adventure starts here.
-</p>
+            <div class="hero-buttons">
+                <a href="#download" class="btn btn-primary">Download the game</a>
+                <a href="#about" class="btn btn-outline">See how it plays</a>
+            </div>
 
-<h1>
-  AHAS NG SFXC
-  <span>JEEPNEY ODYSSEY</span>
-</h1>
+            <div class="ticket">
+                <div class="ticket-main">
+                    <div><strong>Built on</strong><span>Classic Snake, Turtle graphics</span></div>
+                    <div><strong>Setting</strong><span>Barangay streets &amp; terminal</span></div>
+                    <div><strong>Cargo</strong><span>Filipino food &amp; pasahero</span></div>
+                    <div><strong>Hazard</strong><span>Bombs, traffic, tighter turns</span></div>
+                </div>
+                <div class="ticket-stub">SAKAY</div>
+            </div>
+        </div>
 
-<p class="hero-description">
-  Drive your jeepney through the busy barangay streets,
-  collect Filipino food, pick up pasahero, follow traffic
-  lights, avoid bombs, and chase the highest score!
-</p>
+        <div class="road-scene">
+            <div class="road-caption">
+                <strong>Route: Barangay Loop</strong>
+                Snake gameplay, reimagined as a jeepney run
+            </div>
+            <div class="road-strip"></div>
+            <div class="jeep">🛺</div>
+        </div>
 
-<div class="hero-buttons">
-
-  <a href="#download" class="btn btn-primary">
-    ⬇ Download Game
-  </a>
-
-  <a href="#about" class="btn btn-secondary">
-    🎮 Explore Game
-  </a>
-
-</div>
-
-<div class="hero-stats">
-
-  <div>
-    <strong>🐍</strong>
-    <span>Snake Gameplay</span>
-  </div>
-
-  <div>
-    <strong>🛺</strong>
-    <span>Jeepney Theme</span>
-  </div>
-
-  <div>
-    <strong>🍛</strong>
-    <span>Filipino Food</span>
-  </div>
-
-  <div>
-    <strong>🚦</strong>
-    <span>Traffic System</span>
-  </div>
-
-</div>
-```
-
-  </div>
-
+    </div>
 </section>
+
 
 <!-- =====================================================
      ABOUT
 ===================================================== -->
-
 <section id="about" class="section">
+    <div class="container">
 
-  <div class="container">
+        <div class="section-head">
+            <p class="eyebrow">The game</p>
+            <h2>Welcome to the barangay</h2>
+            <p>Classic Snake gameplay meets jeepney culture — same core loop, a whole new route.</p>
+        </div>
 
-```
-<div class="section-heading">
+        <div class="about-grid">
 
-  <span>01 • THE GAME</span>
+            <div class="poster-panel">
+                <h3>What you're playing</h3>
+                <p>
+                    Ahas ng SFXC: Jeepney Odyssey Edition is a Filipino-themed arcade
+                    game built on the classic Snake formula. You steer a jeepney through
+                    the barangay, collecting Filipino food and picking up passengers along
+                    the way.
+                </p>
+                <p>
+                    Bring your pasahero to the barangay terminal to earn your drop-off bonus,
+                    then keep the route going. As the jeepney grows longer, every turn gets
+                    tighter.
+                </p>
+                <p>
+                    Stay alert for bombs on the road, watch the traffic light, grab the
+                    occasional Golden Suman for a shield, and hold your combo streak as long
+                    as you can while chasing your high score.
+                </p>
+            </div>
 
-  <h2>
-    Welcome to the
-    <strong>Barangay</strong>
-  </h2>
+            <div class="manifest">
+                <div class="manifest-row">
+                    <div class="mark">🎯</div>
+                    <div>
+                        <strong>Goal</strong>
+                        <p>Post the highest score before the route ends.</p>
+                    </div>
+                </div>
+                <div class="manifest-row">
+                    <div class="mark">👥</div>
+                    <div>
+                        <strong>Pasahero</strong>
+                        <p>Pick up passengers and deliver them to the terminal.</p>
+                    </div>
+                </div>
+                <div class="manifest-row">
+                    <div class="mark">🏆</div>
+                    <div>
+                        <strong>Challenge</strong>
+                        <p>Beat the high score you set last trip.</p>
+                    </div>
+                </div>
+            </div>
 
-  <p>
-    Classic Snake gameplay meets Filipino jeepney culture.
-  </p>
-
-</div>
-
-
-<div class="about-grid">
-
-  <div class="card about-main">
-
-    <div class="card-icon">🛺</div>
-
-    <h3>Game Description</h3>
-
-    <p>
-      <strong>Ahas ng SFXC: Jeepney Odyssey Edition</strong>
-      is a Filipino-themed arcade game inspired by the classic
-      Snake Game. Players control a jeepney while traveling
-      through the barangay, collecting Filipino food and
-      picking up passengers.
-    </p>
-
-    <p>
-      Bring passengers to the Barangay Terminal to earn
-      rewards, build your score, and continue your journey.
-      As the jeepney grows longer, movement becomes more
-      challenging.
-    </p>
-
-    <p>
-      Players must avoid bombs, pay attention to traffic
-      conditions, collect special items, and maintain their
-      combo streak while trying to beat the high score.
-    </p>
-
-  </div>
-
-
-  <div class="about-side">
-
-    <div class="mini-card">
-      <span>🎯</span>
-      <div>
-        <strong>Goal</strong>
-        <p>Get the highest score.</p>
-      </div>
+        </div>
     </div>
-
-    <div class="mini-card">
-      <span>👨‍👩‍👧</span>
-      <div>
-        <strong>Pasahero</strong>
-        <p>Pick up and deliver passengers.</p>
-      </div>
-    </div>
-
-    <div class="mini-card">
-      <span>🏆</span>
-      <div>
-        <strong>Challenge</strong>
-        <p>Beat your high score.</p>
-      </div>
-    </div>
-
-  </div>
-
-</div>
-```
-
-  </div>
-
 </section>
+
 
 <!-- =====================================================
      CONCEPT
 ===================================================== -->
+<section id="concept" class="section section-alt">
+    <div class="container">
 
-<section id="concept" class="section section-dark">
+        <div class="section-head">
+            <p class="eyebrow">Where it came from</p>
+            <h2>Snake gameplay, Pinoy style</h2>
+            <p>Three stops on the way from a Turtle-graphics Snake game to Jeepney Odyssey.</p>
+        </div>
 
-  <div class="container">
+        <div class="route-path">
 
-```
-<div class="section-heading">
+            <div class="route-stop">
+                <div class="pin">1</div>
+                <h3>Classic foundation</h3>
+                <p>The project began as an existing Python Snake game, built with the Turtle module.</p>
+            </div>
 
-  <span>02 • GAME CONCEPT</span>
+            <div class="route-stop">
+                <div class="pin">2</div>
+                <h3>Filipino transformation</h3>
+                <p>The core loop stayed, but jeepneys, Filipino food, passengers, a barangay terminal, and traffic lights took over the world around it.</p>
+            </div>
 
-  <h2>
-    Snake Gameplay,
-    <strong>Pinoy Style</strong>
-  </h2>
+            <div class="route-stop">
+                <div class="pin">3</div>
+                <h3>New challenge</h3>
+                <p>Bombs, traffic conditions, combo scoring, and a shield power-up raise the stakes on every trip.</p>
+            </div>
 
-</div>
-
-
-<div class="concept-grid">
-
-  <div class="concept-card">
-
-    <div class="number">01</div>
-
-    <h3>Classic Foundation</h3>
-
-    <p>
-      The project started from an existing Python Snake Game
-      built using the Turtle module.
-    </p>
-
-  </div>
-
-
-  <div class="concept-card">
-
-    <div class="number">02</div>
-
-    <h3>Filipino Transformation</h3>
-
-    <p>
-      The original gameplay was enhanced with jeepneys,
-      Filipino food, passengers, barangay terminals,
-      traffic lights, and Filipino-inspired visuals.
-    </p>
-
-  </div>
-
-
-  <div class="concept-card">
-
-    <div class="number">03</div>
-
-    <h3>New Challenge</h3>
-
-    <p>
-      Bombs, traffic conditions, combo scoring, power-ups,
-      and increasing difficulty make every trip more exciting.
-    </p>
-
-  </div>
-
-</div>
-```
-
-  </div>
-
+        </div>
+    </div>
 </section>
+
 
 <!-- =====================================================
      FILIPINO THEME
 ===================================================== -->
-
 <section id="theme" class="section">
+    <div class="container">
 
-  <div class="container">
+        <div class="section-head">
+            <p class="eyebrow">The theme</p>
+            <h2>Proudly Pinoy</h2>
+            <p>Everyday Filipino life and culture, built directly into the rules of the game.</p>
+        </div>
 
-```
-<div class="section-heading">
+        <div class="theme-strip">
 
-  <span>03 • FILIPINO THEME</span>
+            <div class="theme-tile c-red">
+                <span class="theme-icon">🛺</span>
+                <h3>Jeepney culture</h3>
+                <p>The jeepney you steer is the heart of the game, not a reskinned snake head.</p>
+            </div>
 
-  <h2>
-    Proudly
-    <strong>Pinoy</strong>
-  </h2>
+            <div class="theme-tile c-paper">
+                <span class="theme-icon">🍛</span>
+                <h3>Filipino food</h3>
+                <p>Collect mango, pandesal, adobo, halo-halo, isda, and bibingka along the route.</p>
+            </div>
 
-  <p>
-    Inspired by everyday Filipino life and culture.
-  </p>
+            <div class="theme-tile c-gold">
+                <span class="theme-icon">👥</span>
+                <h3>Pasahero</h3>
+                <p>Pick up passengers and get them safely to where they're going.</p>
+            </div>
 
-</div>
+            <div class="theme-tile c-ink">
+                <span class="theme-icon">🏘️</span>
+                <h3>Barangay life</h3>
+                <p>Every run plays out on the streets of a colorful, barangay-inspired map.</p>
+            </div>
 
+            <div class="theme-tile c-teal">
+                <span class="theme-icon">🚦</span>
+                <h3>Traffic rules</h3>
+                <p>Watch for GO, WARNING, and RED — moving through red can cost you a combo.</p>
+            </div>
 
-<div class="theme-grid">
+            <div class="theme-tile c-gold">
+                <span class="theme-icon">🍚</span>
+                <h3>Golden Suman</h3>
+                <p>A rare special item that grants a temporary shield and a score bonus.</p>
+            </div>
 
-  <article class="theme-card">
-
-    <div class="theme-icon">🛺</div>
-
-    <h3>Jeepney Culture</h3>
-
-    <p>
-      The iconic Filipino jeepney becomes the heart
-      of the game.
-    </p>
-
-  </article>
-
-
-  <article class="theme-card">
-
-    <div class="theme-icon">🍛</div>
-
-    <h3>Filipino Food</h3>
-
-    <p>
-      Collect Mango, Pandesal, Adobo, Halo-Halo,
-      Isda, Bibingka, and Golden Suman.
-    </p>
-
-  </article>
-
-
-  <article class="theme-card">
-
-    <div class="theme-icon">👥</div>
-
-    <h3>Pasahero</h3>
-
-    <p>
-      Pick up passengers and deliver them safely
-      to their destination.
-    </p>
-
-  </article>
-
-
-  <article class="theme-card">
-
-    <div class="theme-icon">🏘️</div>
-
-    <h3>Barangay Life</h3>
-
-    <p>
-      Travel through a colorful barangay-inspired
-      environment.
-    </p>
-
-  </article>
-
-
-  <article class="theme-card">
-
-    <div class="theme-icon">🚦</div>
-
-    <h3>Traffic Rules</h3>
-
-    <p>
-      Watch the GO, WARNING, and RED traffic conditions
-      while driving.
-    </p>
-
-  </article>
-
-
-  <article class="theme-card">
-
-    <div class="theme-icon">🍚</div>
-
-    <h3>Golden Suman</h3>
-
-    <p>
-      Collect the special Golden Suman power-up
-      for temporary protection.
-    </p>
-
-  </article>
-
-</div>
-```
-
-  </div>
-
+        </div>
+    </div>
 </section>
+
 
 <!-- =====================================================
      FEATURES
 ===================================================== -->
+<section id="features" class="section section-alt">
+    <div class="container">
 
-<section id="features" class="section section-dark">
+        <div class="section-head">
+            <p class="eyebrow">The mechanics</p>
+            <h2>More than just Snake</h2>
+        </div>
 
-  <div class="container">
+        <div class="sticker-wall">
 
-```
-<div class="section-heading">
+            <div class="sticker">
+                <span>🍴</span>
+                <h3>Food collection</h3>
+                <p>Filipino delicacies add points and grow your combo.</p>
+            </div>
 
-  <span>04 • FEATURES</span>
+            <div class="sticker">
+                <span>👥</span>
+                <h3>Passenger system</h3>
+                <p>Pick up a pasahero, then find the terminal.</p>
+            </div>
 
-  <h2>
-    More Than Just
-    <strong>Snake</strong>
-  </h2>
+            <div class="sticker">
+                <span>🏁</span>
+                <h3>Barangay terminal</h3>
+                <p>Complete a drop-off for a solid score bonus.</p>
+            </div>
 
-</div>
+            <div class="sticker">
+                <span>🚦</span>
+                <h3>Traffic system</h3>
+                <p>The light cycles through GO, WARNING, and RED as you play.</p>
+            </div>
 
+            <div class="sticker">
+                <span>💣</span>
+                <h3>Bomb obstacles</h3>
+                <p>New bombs appear on the road as your score climbs.</p>
+            </div>
 
-<div class="feature-grid">
+            <div class="sticker">
+                <span>🔥</span>
+                <h3>Combo streak</h3>
+                <p>Chain collections back-to-back for bigger payouts.</p>
+            </div>
 
-  <div class="feature">
-    <span>🍴</span>
-    <h3>Food Collection</h3>
-    <p>Collect Filipino delicacies for points.</p>
-  </div>
+            <div class="sticker">
+                <span>🛡️</span>
+                <h3>Golden Suman shield</h3>
+                <p>Temporary protection from bombs, plus bonus points.</p>
+            </div>
 
-  <div class="feature">
-    <span>👥</span>
-    <h3>Passenger System</h3>
-    <p>Pick up and deliver pasahero.</p>
-  </div>
+            <div class="sticker">
+                <span>🏆</span>
+                <h3>High score</h3>
+                <p>Every trip is a chance to beat your own record.</p>
+            </div>
 
-  <div class="feature">
-    <span>🏁</span>
-    <h3>Barangay Terminal</h3>
-    <p>Complete passenger deliveries for rewards.</p>
-  </div>
-
-  <div class="feature">
-    <span>🚦</span>
-    <h3>Traffic System</h3>
-    <p>React to changing traffic conditions.</p>
-  </div>
-
-  <div class="feature">
-    <span>💣</span>
-    <h3>Bomb Obstacles</h3>
-    <p>Avoid dangerous obstacles on the road.</p>
-  </div>
-
-  <div class="feature">
-    <span>🔥</span>
-    <h3>Combo System</h3>
-    <p>Keep collecting to build your combo.</p>
-  </div>
-
-  <div class="feature">
-    <span>🛡️</span>
-    <h3>Golden Suman</h3>
-    <p>Use the special shield power-up.</p>
-  </div>
-
-  <div class="feature">
-    <span>🏆</span>
-    <h3>High Score</h3>
-    <p>Challenge yourself to beat your record.</p>
-  </div>
-
-</div>
-```
-
-  </div>
-
+        </div>
+    </div>
 </section>
+
 
 <!-- =====================================================
      SCREENSHOTS
 ===================================================== -->
-
 <section id="screenshots" class="section">
+    <div class="container">
 
-  <div class="container">
+        <div class="section-head">
+            <p class="eyebrow">In motion</p>
+            <h2>See the action</h2>
+            <p>Gameplay pulled straight from a run of Ahas ng SFXC.</p>
+        </div>
 
-```
-<div class="section-heading">
+        <div class="corkboard">
 
-  <span>05 • GAMEPLAY</span>
+            <figure class="polaroid">
+                <img src="screenshots/gameplay.png" alt="Ahas ng SFXC gameplay">
+                <figcaption>Main gameplay</figcaption>
+            </figure>
 
-  <h2>
-    See the
-    <strong>Action</strong>
-  </h2>
+            <figure class="polaroid">
+                <img src="screenshots/traffic.png" alt="Ahas ng SFXC traffic system">
+                <figcaption>Traffic light system</figcaption>
+            </figure>
 
-  <p>
-    Replace the placeholders with your actual game screenshots.
-  </p>
+            <figure class="polaroid">
+                <img src="screenshots/pasahero.png" alt="Ahas ng SFXC passenger system">
+                <figcaption>Pasahero pickup</figcaption>
+            </figure>
 
-</div>
+            <figure class="polaroid">
+                <img src="screenshots/golden-suman.png" alt="Ahas ng SFXC Golden Suman">
+                <figcaption>Golden Suman power-up</figcaption>
+            </figure>
 
-
-<div class="screenshots-grid">
-
-  <figure class="screenshot-card">
-
-    <img
-      src="screenshots/gameplay.png"
-      alt="Ahas ng SFXC gameplay screenshot"
-      onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
-    >
-
-    <div class="screenshot-placeholder">
-      🎮
-      <span>Main Gameplay</span>
+        </div>
     </div>
-
-    <figcaption>
-      Main Gameplay
-    </figcaption>
-
-  </figure>
-
-
-  <figure class="screenshot-card">
-
-    <img
-      src="screenshots/traffic.png"
-      alt="Ahas ng SFXC traffic system"
-      onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
-    >
-
-    <div class="screenshot-placeholder">
-      🚦
-      <span>Traffic System</span>
-    </div>
-
-    <figcaption>
-      Traffic Light System
-    </figcaption>
-
-  </figure>
-
-
-  <figure class="screenshot-card">
-
-    <img
-      src="screenshots/pasahero.png"
-      alt="Ahas ng SFXC passenger system"
-      onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
-    >
-
-    <div class="screenshot-placeholder">
-      👥
-      <span>Pasahero</span>
-    </div>
-
-    <figcaption>
-      Pasahero Pickup
-    </figcaption>
-
-  </figure>
-
-
-  <figure class="screenshot-card">
-
-    <img
-      src="screenshots/golden-suman.png"
-      alt="Ahas ng SFXC Golden Suman power-up"
-      onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
-    >
-
-    <div class="screenshot-placeholder">
-      🍚
-      <span>Golden Suman</span>
-    </div>
-
-    <figcaption>
-      Golden Suman Power-Up
-    </figcaption>
-
-  </figure>
-
-</div>
-```
-
-  </div>
-
 </section>
+
 
 <!-- =====================================================
      HOW TO PLAY
 ===================================================== -->
+<section id="how-to-play" class="section section-alt">
+    <div class="container">
 
-<section id="how-to-play" class="section section-dark">
+        <div class="section-head">
+            <p class="eyebrow">Behind the wheel</p>
+            <h2>How to play</h2>
+        </div>
 
-  <div class="container">
+        <div class="controls-wrap">
 
-```
-<div class="section-heading">
+            <div>
+                <div class="keypad">
+                    <div class="key up">W</div>
+                    <div class="key left">A</div>
+                    <div class="key down">S</div>
+                    <div class="key right">D</div>
+                </div>
 
-  <span>06 • CONTROLS</span>
+                <div class="control-list">
+                    <div class="control-line"><kbd>Arrow keys</kbd><span>Also steer the jeepney</span></div>
+                    <div class="control-line"><kbd>P</kbd><span>Pause and resume</span></div>
+                    <div class="control-line"><kbd>Space</kbd><span>Restart the route</span></div>
+                </div>
+            </div>
 
-  <h2>
-    How to
-    <strong>Play</strong>
-  </h2>
+            <div class="tips-card">
+                <h3>Driver tips</h3>
+                <ul>
+                    <li>Collect food to raise your score.</li>
+                    <li>Pick up passengers and deliver them to the terminal.</li>
+                    <li>Avoid bombs and other road hazards.</li>
+                    <li>Watch the traffic light before you turn.</li>
+                    <li>Save Golden Suman for when you need the shield.</li>
+                    <li>Keep your combo going for bigger payouts.</li>
+                </ul>
+            </div>
 
-</div>
-
-
-<div class="controls-grid">
-
-  <div class="control-item">
-    <kbd>W</kbd>
-    <kbd>↑</kbd>
-    <span>Move Up</span>
-  </div>
-
-  <div class="control-item">
-    <kbd>S</kbd>
-    <kbd>↓</kbd>
-    <span>Move Down</span>
-  </div>
-
-  <div class="control-item">
-    <kbd>A</kbd>
-    <kbd>←</kbd>
-    <span>Move Left</span>
-  </div>
-
-  <div class="control-item">
-    <kbd>D</kbd>
-    <kbd>→</kbd>
-    <span>Move Right</span>
-  </div>
-
-  <div class="control-item">
-    <kbd>P</kbd>
-    <span>Pause / Resume</span>
-  </div>
-
-  <div class="control-item">
-    <kbd>SPACE</kbd>
-    <span>Restart</span>
-  </div>
-
-</div>
-
-
-<div class="tips-card">
-
-  <h3>💡 Driver Tips</h3>
-
-  <ul>
-    <li>Collect food to increase your score.</li>
-    <li>Pick up passengers and deliver them to the terminal.</li>
-    <li>Avoid bombs and dangerous obstacles.</li>
-    <li>Watch the traffic system.</li>
-    <li>Use Golden Suman when you need protection.</li>
-    <li>Keep your combo going for better scores.</li>
-  </ul>
-
-</div>
-```
-
-  </div>
-
+        </div>
+    </div>
 </section>
+
 
 <!-- =====================================================
      DOWNLOAD
 ===================================================== -->
+<section id="download" class="section">
+    <div class="container">
 
-<section id="download" class="section download-section">
+        <div class="section-head">
+            <p class="eyebrow">Get on board</p>
+            <h2>Ready to sakay?</h2>
+            <p>Grab the version that fits how you want to play.</p>
+        </div>
 
-  <div class="container">
+        <div class="download-layout">
 
-```
-<div class="section-heading">
+            <div class="download-primary">
+                <div>
+                    <span class="tag">Recommended</span>
+                    <h3>Windows game</h3>
+                    <p>Play Ahas ng SFXC on Windows without installing Python.</p>
+                </div>
+                <a href="Ahas.exe" download class="btn btn-dark">Download Ahas.exe</a>
+            </div>
 
-  <span>07 • GET THE GAME</span>
+            <div class="download-side">
 
-  <h2>
-    Ready to
-    <strong>Sakay?</strong>
-  </h2>
+                <div class="download-mini">
+                    <span>🐍</span>
+                    <div>
+                        <h4>Python source</h4>
+                        <p>The full .py source code.</p>
+                    </div>
+                    <a href="Ahas.py" download>Download</a>
+                </div>
 
-  <p>
-    Download the source code or Windows version.
-  </p>
+                <div class="download-mini">
+                    <span>📱</span>
+                    <div>
+                        <h4>Android APK</h4>
+                        <p>The Jeepney Odyssey mobile build.</p>
+                    </div>
+                    <a href="Jeepney.Odyssey.Ahas.apk" download>Download</a>
+                </div>
 
-</div>
+            </div>
 
+        </div>
 
-<div class="download-grid">
+        <div class="repo-ticket">
+            <div class="rt-left">
+                <h3>View the project on GitHub</h3>
+                <p>Browse the source code and project files.</p>
+                <a href="https://github.com/YOUR-USERNAME/AHAS-NG-SFXC" target="_blank" rel="noopener" class="btn btn-outline" style="margin-top:16px; border-color:#c9bd9c; color:#2a2013;">Open GitHub</a>
+            </div>
+            <div class="rt-right">
+                <div class="qr-frame">
+                    <img src="QRcode.jpg" alt="Ahas ng SFXC QR code">
+                    <p>Scan to open this page on your phone.</p>
+                </div>
+            </div>
+        </div>
 
-
-  <!-- PYTHON -->
-
-  <div class="download-card">
-
-    <div class="download-icon">🐍</div>
-
-    <h3>Python Source</h3>
-
-    <p>
-      Download the complete Python source code
-      and explore how the game was created.
-    </p>
-
-    <a
-      href="source/Ahas.py"
-      download
-      class="btn btn-primary"
-    >
-      ⬇ Download .PY
-    </a>
-
-  </div>
-
-
-  <!-- EXE -->
-
-  <div class="download-card featured-download">
-
-    <div class="recommended">
-      RECOMMENDED
     </div>
-
-    <div class="download-icon">🎮</div>
-
-    <h3>Windows Game</h3>
-
-    <p>
-      Play the game without opening the Python
-      source code.
-    </p>
-
-    <a
-      href="download/AHAS_NG_SFXC.exe"
-      download
-      class="btn btn-primary"
-    >
-      🎮 Download EXE
-    </a>
-
-  </div>
-
-
-  <!-- ZIP -->
-
-  <div class="download-card">
-
-    <div class="download-icon">📦</div>
-
-    <h3>Complete Package</h3>
-
-    <p>
-      Download the complete project package
-      containing the game files and resources.
-    </p>
-
-    <a
-      href="download/Ahas-ng-SFXC-Jeepney-Odyssey.zip"
-      download
-      class="btn btn-secondary"
-    >
-      📦 Download ZIP
-    </a>
-
-  </div>
-
-</div>
-
-
-<div class="github-box">
-
-  <span>💻</span>
-
-  <div>
-
-    <h3>View the Project on GitHub</h3>
-
-    <p>
-      Explore the source code and project files.
-    </p>
-
-  </div>
-
-  <a
-    href="https://github.com/YOUR-USERNAME/AHAS-NG-SFXC"
-    target="_blank"
-    rel="noopener"
-    class="btn btn-secondary"
-  >
-    GitHub →
-  </a>
-
-</div>
-```
-
-  </div>
-
 </section>
+
 
 <!-- =====================================================
      DEVELOPER
 ===================================================== -->
+<section id="developer" class="section section-alt">
+    <div class="container">
 
-<section id="developer" class="section">
+        <div class="section-head" style="margin:0 auto 56px; text-align:center;">
+            <p class="eyebrow">Who built this</p>
+            <h2>Meet the developer</h2>
+        </div>
 
-  <div class="container">
+        <div class="id-card">
+            <div class="id-photo">🇵🇭</div>
+            <div class="id-info">
+                <p class="id-label">Developed by</p>
+                <h3>Joseph S. Camporedondo Jr.</h3>
+                <p>BSIT — [Your Section]</p>
+                <p>[Your School Name] (SFXC)</p>
+                <span class="id-role">Python Game Enhancement Project</span>
+            </div>
+        </div>
 
-```
-<div class="section-heading">
-
-  <span>08 • DEVELOPER</span>
-
-  <h2>
-    Meet the
-    <strong>Developer</strong>
-  </h2>
-
-</div>
-
-
-<div class="developer-card">
-
-  <div class="dev-avatar">
-    🇵🇭
-  </div>
-
-  <div class="dev-details">
-
-    <p class="dev-label">
-      DEVELOPED BY
-    </p>
-
-    <h3>
-      Joseph S. Camporedondo Jr.
-    </h3>
-
-    <p>
-      BSIT – [Your Section]
-    </p>
-
-    <p>
-      [Your School Name] (SFXC)
-    </p>
-
-    <span>
-      Python Game Enhancement Project
-    </span>
-
-  </div>
-
-</div>
-```
-
-  </div>
-
+    </div>
 </section>
 
+
 <!-- =====================================================
-     PROJECT INFO
+     BANNER
 ===================================================== -->
-
-<section class="project-banner">
-
-  <div class="container">
-
-```
-<div>
-
-  <span>🇵🇭 MADE WITH FILIPINO CREATIVITY</span>
-
-  <h2>
-    Classic Snake.
-    <br>
-    Filipino Adventure.
-  </h2>
-
-</div>
-
-<a href="#download" class="btn btn-primary">
-  Play Now →
-</a>
-```
-
-  </div>
-
+<section class="banner">
+    <div class="container">
+        <div>
+            <span class="tag">🇵🇭 Made with Filipino creativity</span>
+            <h2>Classic Snake. Filipino adventure.</h2>
+        </div>
+        <a href="#download" class="btn btn-dark">Play the game</a>
+    </div>
 </section>
 
 </main>
 
+
 <!-- =====================================================
      FOOTER
 ===================================================== -->
-
 <footer class="site-footer">
+    <div class="container footer-grid">
 
-  <div class="container footer-grid">
+        <div>
+            <a href="#home" class="footer-brand">🛺 Ahas ng SFXC</a>
+            <p style="margin-top:10px;">Jeepney Odyssey Edition</p>
+            <small>A Filipino-themed Python arcade game.</small>
+        </div>
 
-```
-<div>
+        <div class="footer-links">
+            <strong>Explore</strong>
+            <a href="#about">About</a>
+            <a href="#concept">Concept</a>
+            <a href="#theme">Filipino theme</a>
+            <a href="#features">Features</a>
+            <a href="#screenshots">Screenshots</a>
+        </div>
 
-  <a href="#home" class="footer-brand">
-    🛺 AHAS NG SFXC
-  </a>
+        <div class="footer-links">
+            <strong>Game</strong>
+            <a href="#how-to-play">How to play</a>
+            <a href="#download">Download</a>
+            <a href="#developer">Developer</a>
+        </div>
 
-  <p>
-    Jeepney Odyssey Edition
-  </p>
+    </div>
 
-  <small>
-    A Filipino-themed Python arcade game.
-  </small>
-
-</div>
-
-
-<div class="footer-links">
-
-  <strong>Explore</strong>
-
-  <a href="#about">About</a>
-  <a href="#concept">Concept</a>
-  <a href="#features">Features</a>
-  <a href="#screenshots">Screenshots</a>
-
-</div>
-
-
-<div class="footer-links">
-
-  <strong>Game</strong>
-
-  <a href="#how-to-play">How to Play</a>
-  <a href="#download">Download</a>
-  <a href="#developer">Developer</a>
-
-</div>
-```
-
-  </div>
-
-  <div class="footer-bottom">
-
-```
-<p>
-  © 2026 Ahas ng SFXC: Jeepney Odyssey Edition
-</p>
-
-<p>
-  🇵🇭 Made in the Philippines
-</p>
-```
-
-  </div>
-
+    <div class="footer-bottom">
+        <p>© 2026 Ahas ng SFXC: Jeepney Odyssey Edition</p>
+        <p>🇵🇭 Made in the Philippines</p>
+    </div>
 </footer>
 
-<script src="js/main.js"></script>
+<script>
+    var toggle = document.getElementById('navToggle');
+    var menu = document.getElementById('mobileMenu');
+    toggle.addEventListener('click', function(){
+        menu.classList.toggle('open');
+    });
+    menu.querySelectorAll('a').forEach(function(a){
+        a.addEventListener('click', function(){ menu.classList.remove('open'); });
+    });
+</script>
 
 </body>
 </html>
