@@ -517,6 +517,20 @@ h1,h2,h3{ font-family: var(--font-display); font-weight:400; letter-spacing:0.01
     margin-top: 10px;
 }
 
+.corkboard-single{
+    grid-template-columns: 1fr;
+    justify-items: center;
+}
+.polaroid-lg{
+    max-width: 520px;
+    transform: rotate(-1deg);
+}
+.polaroid-lg img{
+    height: 420px;
+    object-fit: contain;
+    background: #0b3d2e;
+}
+
 /* =====================================================
    HOW TO PLAY — keycaps
 ===================================================== */
@@ -1102,26 +1116,11 @@ h1,h2,h3{ font-family: var(--font-display); font-weight:400; letter-spacing:0.01
             <p>Gameplay pulled straight from a run of Ahas ng SFXC.</p>
         </div>
 
-        <div class="corkboard">
+        <div class="corkboard corkboard-single">
 
-            <figure class="polaroid">
-                <img src="screenshots/gameplay.png" alt="Ahas ng SFXC gameplay">
-                <figcaption>Main gameplay</figcaption>
-            </figure>
-
-            <figure class="polaroid">
-                <img src="screenshots/traffic.png" alt="Ahas ng SFXC traffic system">
-                <figcaption>Traffic light system</figcaption>
-            </figure>
-
-            <figure class="polaroid">
-                <img src="screenshots/pasahero.png" alt="Ahas ng SFXC passenger system">
-                <figcaption>Pasahero pickup</figcaption>
-            </figure>
-
-            <figure class="polaroid">
-                <img src="screenshots/golden-suman.png" alt="Ahas ng SFXC Golden Suman">
-                <figcaption>Golden Suman power-up</figcaption>
+            <figure class="polaroid polaroid-lg">
+                <img src="screenshots/gameplay.png" alt="Ahas ng SFXC gameplay showing the jeepney, score, and road">
+                <figcaption>Live gameplay — jeepney, score, and the road ahead</figcaption>
             </figure>
 
         </div>
@@ -1214,7 +1213,7 @@ h1,h2,h3{ font-family: var(--font-display); font-weight:400; letter-spacing:0.01
                         <h4>Android APK</h4>
                         <p>The Jeepney Odyssey mobile build.</p>
                     </div>
-                    href="download/Jeepney.Odyssey.Ahas.apk"
+                    <a href="Jeepney-Odyssey-Ahas.apk" download>Download</a>
                 </div>
 
             </div>
